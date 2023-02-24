@@ -7,7 +7,7 @@ def processNorm(symbol, investment, startDate, endDate):
     stockSym = yf.Ticker(symbol)
     startD = datetime.datetime(startDate)
     endD = datetime.datetime(endDate)
-    
+
 def processDrip(symbol, investment, startDate, endDate):
     stockSym = yf.Ticker(symbol)
 
@@ -49,6 +49,9 @@ dGrowth.grid(row = 5, column = 1, pady = 2)
 tEarnings.grid(row = 6, column = 1, pady = 2)
 oValue.grid(row = 7, column = 1, pady = 2)
  
-norm = Button(master, text="Enter", pady = 2, command=processNorm)
-drip = Button(master, text="Enter", pady = 2, command=processDrip)
+norm = Button(master, text="Keep Dividends", command=processNorm)
+drip = Button(master, text="Reinvest Dividends", command=processDrip)
+
+norm.grid(row=8, column=0, pady=2)
+drip.grid(row=8, column=1, pady=2)
 mainloop()
