@@ -1,15 +1,22 @@
 import yfinance as yf
+import datetime
 from tkinter import * 
 from tkinter.ttk import *
 
-def process(symbol, investment, startDate, endDate):
+def processNorm(symbol, investment, startDate, endDate):
     stockSym = yf.Ticker(symbol)
+    startD = datetime.datetime(startDate)
+    endD = datetime.datetime(endDate)
+    
+def processDrip(symbol, investment, startDate, endDate):
+    stockSym = yf.Ticker(symbol)
+
 master = Tk()
 
 symL = Label(master, text = "Stock Symbol:")
 investL = Label(master, text = "Initial Investment:")
-startD = Label(master, text="Start Date (mm/dd/yy):")
-endD = Label(master, text="End Date (mm/dd/yy):")
+startD = Label(master, text="Start Date (yyyy, mm, dd):")
+endD = Label(master, text="End Date (yyyy, mm, dd):")
 stockGrowth = Label(master, text="Stock Growth Earnings:")
 divGrowth = Label(master, text="Dividend Earnings:")
 totalEarnings = Label(master, text="Total Earnings:")
@@ -42,5 +49,6 @@ dGrowth.grid(row = 5, column = 1, pady = 2)
 tEarnings.grid(row = 6, column = 1, pady = 2)
 oValue.grid(row = 7, column = 1, pady = 2)
  
-enter = Button(master, text="Enter", pady = 2, command=process)
+norm = Button(master, text="Enter", pady = 2, command=processNorm)
+drip = Button(master, text="Enter", pady = 2, command=processDrip)
 mainloop()
