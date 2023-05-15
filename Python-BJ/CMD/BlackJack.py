@@ -2,6 +2,9 @@ from random import *
 import turtle as t
 
 cardTypes = (" of Clubs", " of Spades", " of Hearts", " of Diamonds")
+playerDict = {}
+dealerDict = {}
+turnCount = 0
 
 def setRoyal(num):
     if(num == 11):
@@ -9,7 +12,7 @@ def setRoyal(num):
     elif(num == 12):
         royal = "Queen"
     elif(num == 13):
-        royal == "King"
+        royal = "King"
     else:
         royal = ""
     return royal
@@ -55,8 +58,11 @@ def betLoop(payroll):
             else:
                 print("You must enter a valid bet!")
 
+
 def choiceLoop():
     global choice
+    global turnCount
+
     choiceLoop = True
     while choiceLoop:
         choice = input("Would you like to (h)it or (s)tand?: ")
@@ -66,26 +72,82 @@ def choiceLoop():
             choiceLoop = False
         else:
             print("Enter a valid value!")
+    if(choice == "h"):
+        turnCount += 1
+        playerDraw(turnCount)
+    elif(choice == "s"):
+        dealerTurn()
 
-def playerDraw():
-    pass
+def playerDraw(count):
+    playerDict[count] = Card()
+    pList.append(playerDict[count].num)
+
+    print("You drew: " + playerDict[count].name())
+    print("Your total is: " + str(sum(pList)))
+    print()
+
+    if(sum(pList) > 21):
+        print("You went over 21! You Lose!")
+        print()
+        loss()
+    else:
+        choiceLoop()
+
 
 def dealerTurn():
-    pass
+    global dealerCount
+    dealerCount = 2
+    
+    print("Dealer's Turn!")
+    print("Dealer's Cards are : " + dealerDict[1].name() + ", " + dealerDict[2].name() + " Total: " + str(sum(dList)))
+    print()
 
-def dealerDraw():
-    pass
+    if(sum(dList) < 17):
+        while (sum(dList) < 17):
+            dealerCount += 1
+            dealerDraw(dealerCount)
+    if(sum(dList) > 21):
+        print("Dealer went over 21! You Win!")
+        print()
+        win()
+    else:
+        checkWin()
+
+def dealerDraw(count):
+    dealerDict[count] = Card()
+    dList.append(dealerDict[count].num)
+
+    print("Dealer drew: " + dealerDict[count].name())
+    print("Dealer's total is: " + str(sum(dList)))
+    print()
+
+
+def checkWin():
+    if(sum(dList) < sum(pList)):
+        print("You have the better hand! You Win!\n")
+        print()
+        win()
+    elif(sum(dList) == sum(pList)):
+        print("You both have an equal hand! Push!\n")
+        print()
+        push()
+    else:
+        print("The Dealer has the better hand! You Lose!\n")
+        print()
+        loss()
 
 def win():
-    pass
+    global payroll
+    payroll += bet
+    mainGame()
 
 def loss():
-    pass
+    global payroll
+    payroll -= bet
+    mainGame()
 
-
-
-
-
+def push():
+    mainGame()
 
 
 def initializeGame():
@@ -119,27 +181,33 @@ def initializeGame():
         payroll = 10000.0
     elif(diff == "h"):
         payroll = 5000.0
+    mainGame()
 
-def mainGame(difficulty):
+def mainGame():
+    global pList
+    global dList
+    global turnCount
+
+    turnCount = 2
+
     betLoop(payroll)
     print("You have bet:", bet, "chips!\n")
+    print()
 
-    d1 = Card()
-    d2 = Card()
-    p1 = Card()
-    p2 = Card()
-    pList = [p1.num, p2.num]
-    dList = [d1.num, d2.num]
+    dealerDict[1] = Card()
+    dealerDict[2] = Card()
+    playerDict[1] = Card()
+    playerDict[2] = Card()
+    pList = [playerDict[1].num, playerDict[2].num]
+    dList = [dealerDict[1].num, dealerDict[2].num]
 
-    print("The dealer's face card is:", d1.name())
+    print("The dealer's face card is:", dealerDict[1].name(), "Total:", dealerDict[1].num)
+    print()
 
-    print("Your cards are:", p1.name(), "and", p2.name(), "Total:", str(sum(pList)))
+    print("Your cards are:", playerDict[1].name(), "and", playerDict[2].name(), "Total:", str(sum(pList)))
     print()
     
     choiceLoop()
-    if(choice == "h"):
-        playerDraw()
-    elif(choice == "s"):
-        dealerTurn()
 
-    
+
+initializeGame()
