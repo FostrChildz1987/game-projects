@@ -30,7 +30,7 @@ class Card:
             self.num = 10
         elif(self.num == 14):
             self.isAce = True
-            self.num = 1
+            self.num = 11
         
         self.cardType = cardTypes[randint(0,3)]
 
@@ -65,31 +65,51 @@ def choiceLoop():
 
     choiceLoop = True
     while choiceLoop:
-        choice = input("Would you like to (h)it or (s)tand?: ")
-        if(choice == "h"):
+        choice = input("Would you like to (h)it or (s)tand (e to exit)?: ")
+        if choice == "h":
             choiceLoop = False
-        elif(choice == "s"):
+        elif choice == "e":
+            quit()
+        elif choice == "s":
             choiceLoop = False
         else:
             print("Enter a valid value!")
-    if(choice == "h"):
+    if choice == "h":
         turnCount += 1
         playerDraw(turnCount)
-    elif(choice == "s"):
+    elif choice == "s":
         dealerTurn()
 
 def playerDraw(count):
     playerDict[count] = Card()
     pList.append(playerDict[count].num)
 
+    if playerDict[count].isAce:
+        if sum(pList) + 10 <= 21:
+            playerDict[count].num = 11
+            pList[-1] = 11
+        else:
+            playerDict[count].num = 1
+            pList[-1] = 1
+
     print("You drew: " + playerDict[count].name())
     print("Your total is: " + str(sum(pList)))
     print()
 
-    if(sum(pList) > 21):
-        print("You went over 21! You Lose!")
-        print()
-        loss()
+    if sum(pList) > 21:
+        # Check if there are Aces in the hand
+        if 11 in pList:
+            # Find the first Ace and change its value to 1
+            index = pList.index(11)
+            pList[index] = 1
+            print("Changing Ace value to 1.")
+            print("Your new total is: " + str(sum(pList)))
+            print()
+            choiceLoop()
+        else:
+            print("You went over 21! You Lose!")
+            print()
+            loss()
     else:
         choiceLoop()
 
@@ -138,7 +158,10 @@ def checkWin():
 
 def win():
     global payroll
-    payroll += bet
+    if(len(pList) == 2 and sum(pList) == 21):
+        payroll = payroll + payroll * 1.5
+    else:
+        payroll += bet
     mainGame()
 
 def loss():
