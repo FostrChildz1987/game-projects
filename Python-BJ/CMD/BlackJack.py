@@ -144,7 +144,10 @@ def win():
 def loss():
     global payroll
     payroll -= bet
-    mainGame()
+    if (payroll <= 0):
+        print("You have went Bankrupt! GAME OVER!")
+    else:
+        mainGame()
 
 def push():
     mainGame()
