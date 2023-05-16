@@ -1,10 +1,12 @@
 from random import *
 import turtle as t
+from time import sleep
 
 cardTypes = (" of Clubs", " of Spades", " of Hearts", " of Diamonds")
 playerDict = {}
 dealerDict = {}
 turnCount = 0
+survival = False
 
 def setRoyal(num):
     if(num == 11):
@@ -65,6 +67,7 @@ def choiceLoop():
 
     choiceLoop = True
     while choiceLoop:
+        sleep(0.5)
         choice = input("Would you like to (h)it or (s)tand (e to exit)?: ")
         if choice == "h":
             choiceLoop = False
@@ -92,7 +95,9 @@ def playerDraw(count):
             playerDict[count].num = 1
             pList[-1] = 1
 
+    sleep(0.5)
     print("You drew: " + playerDict[count].name())
+    sleep(0.5)
     print("Your total is: " + str(sum(pList)))
     print()
 
@@ -102,11 +107,13 @@ def playerDraw(count):
             # Find the first Ace and change its value to 1
             index = pList.index(11)
             pList[index] = 1
+            sleep(0.5)
             print("Changing Ace value to 1.")
             print("Your new total is: " + str(sum(pList)))
             print()
             choiceLoop()
         else:
+            sleep(0.5)
             print("You went over 21! You Lose!")
             print()
             loss()
@@ -118,7 +125,9 @@ def dealerTurn():
     global dealerCount
     dealerCount = 2
     
+    sleep(0.5)
     print("Dealer's Turn!")
+    sleep(0.5)
     print("Dealer's Cards are : " + dealerDict[1].name() + ", " + dealerDict[2].name() + " Total: " + str(sum(dList)))
     print()
 
@@ -127,6 +136,7 @@ def dealerTurn():
             dealerCount += 1
             dealerDraw(dealerCount)
     if(sum(dList) > 21):
+        sleep(0.5)
         print("Dealer went over 21! You Win!")
         print()
         win()
@@ -137,21 +147,26 @@ def dealerDraw(count):
     dealerDict[count] = Card()
     dList.append(dealerDict[count].num)
 
+    sleep(0.5)
     print("Dealer drew: " + dealerDict[count].name())
+    sleep(0.5)
     print("Dealer's total is: " + str(sum(dList)))
     print()
 
 
 def checkWin():
     if(sum(dList) < sum(pList)):
+        sleep(0.5)
         print("You have the better hand! You Win!\n")
         print()
         win()
     elif(sum(dList) == sum(pList)):
+        sleep(0.5)
         print("You both have an equal hand! Push!\n")
         print()
         push()
     else:
+        sleep(0.5)
         print("The Dealer has the better hand! You Lose!\n")
         print()
         loss()
@@ -162,12 +177,25 @@ def win():
         payroll = payroll + payroll * 1.5
     else:
         payroll += bet
-    mainGame()
+    
+    if(payroll >= 100000 and survival == False):
+        sleep(0.5)
+        print("You survived! Most people are so ungrateful to be alive, but not you, not anymore!")
+        print("You beat the House!")
+        survivalMode = input("Enter Endless Mode (y/n): ")
+        if(survivalMode == "n"):
+            quit()
+        else:
+            survival = True
+            mainGame()
+    else:
+        mainGame()
 
 def loss():
     global payroll
     payroll -= bet
     if (payroll <= 0):
+        sleep(0.5)
         print("You have went Bankrupt! GAME OVER!")
     else:
         mainGame()
@@ -182,7 +210,7 @@ def initializeGame():
 
     print("Welcome to Bigus Dickus Blackjack!")
     print()
-    print("Standard Rules - Blackjack Pays 3 to 5 - No Insurance")
+    print("Standard Rules - Blackjack Pays 3 to 2 - No Insurance")
     print()
     print("Get as close to 21 as you can without going over!")
     print("Royal cards (King, Queen, Jack) are worth 10 points!")
@@ -227,10 +255,12 @@ def mainGame():
     pList = [playerDict[1].num, playerDict[2].num]
     dList = [dealerDict[1].num, dealerDict[2].num]
 
-    print("The dealer's face card is:", dealerDict[1].name(), "Total:", dealerDict[1].num)
+    sleep(0.5)
+    print("The Dealer's face card is:", dealerDict[1].name(), "Total:", dealerDict[1].num)
     print()
 
-    print("Your cards are:", playerDict[1].name(), "and", playerDict[2].name(), "Total:", str(sum(pList)))
+    sleep(0.5)
+    print("Your cards are:", playerDict[1].name(), "and", playerDict[2].name(), "- Total:", str(sum(pList)))
     print()
     
     choiceLoop()
